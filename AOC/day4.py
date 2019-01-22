@@ -73,13 +73,17 @@ def which_minute(victim_id, register):
 
     # iterate through all register, considering only the victim's sleep attempts
     for date, comment in register.items():
+
+        # consider only concrete hour and minute, not the whole date
+        time_of_day = datetime.timedelta(hours=date.hour, minutes=date.minute)
+
         if '#' in comment[1] and comment[1][1:] == str(victim_id):
             is_victim = True
         elif '#' in comment[1] and comment[1][1:] != str(victim_id):
             is_victim = False
 
         if 'asleep' in comment[1] and is_victim:
-            minute_register[datetime.timedelta(hours=date.hour, minutes=date.minute)] = minute_register.get(datetime.timedelta(hours=date.hour, minutes=date.minute), 0) + 1
+            minute_register[time_of_day] = minute_register.get(time_of_day, 0) + 1
             nap_start = date
         elif 'up' in comment[1] and is_victim:
             nap_end = date
@@ -88,7 +92,6 @@ def which_minute(victim_id, register):
             # having start- and end-time of each nap of the victim,
             # give each minute between start and stop the value of +1
             for i in range(1, int(nap_time.total_seconds()/60)):
-                time_of_day = datetime.timedelta(hours=date.hour, minutes=date.minute)
                 minute_register[time_of_day - datetime.timedelta(minutes=i)] = \
                     minute_register.get(time_of_day - datetime.timedelta(minutes=i), 0) + 1
 
