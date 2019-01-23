@@ -62,7 +62,7 @@ def get_sleep_records(register):
 
 def which_minute(victim_id, register):
     '''
-    Given the ID of the most sleeping guard, crates a dictionary where key = hour, value = sleep attempts
+    Given the ID of the most sleeping guard, creates a dictionary where key = hour, value = sleep attempts
     :param victim_id: ID of the laziest guard
     :param register: register (dictionary) ordered beforehand by date
     :return: dictionary
@@ -98,6 +98,27 @@ def which_minute(victim_id, register):
     return minute_register
 
 
+def find_guard_and_minute(records):
+    '''
+    Perform function which_minute() for each guard and return the id and minute of the one
+    sleeping most frequently on certain minute of the day
+    :param records: sleep records of every guard
+    :return: id, exact minute, sleep attempts on that minute by guard of calculated id
+    '''
+    max_sleep_attempts = 0
+
+    for id, _ in records.items():
+        victim_register = which_minute(id, register)
+        max_value = max(victim_register.values())
+        max_arg = max(victim_register, key=victim_register.get)
+        if max_value > max_sleep_attempts:
+            max_sleep_attempts = max_value
+            most_sleepy_minute = max_arg
+            max_id = id
+
+    return max_id, most_sleepy_minute, max_sleep_attempts
+
+
 if __name__ == '__main__':
     inputs = open('inputs/input4.txt').read().splitlines()
 
@@ -107,10 +128,18 @@ if __name__ == '__main__':
     max_value = max(records.values())
     max_arg = max(records, key=records.get)
 
+    print('                 *** Strategy 1 ***')
     print('The longest nap time had guard #{}, making it a total of {}.'.format(max_arg, max_value))
 
     victim_register = which_minute(max_arg, register)
     max_value = max(victim_register.values())
     max_arg = max(victim_register, key=victim_register.get)
 
-    print('The least guarded hour is {}, with {} sleep cases.'.format(max_arg, max_value))
+    print('His least guarded hour is {}, with {} sleep cases.'.format(max_arg, max_value))
+
+    str2_id, str2_minute, str2_guard_id = find_guard_and_minute(records)
+
+    print('                 *** Strategy 2 ***')
+    print('Guard #{} is the most frequently asleep on minute {}, making it {} times in total.'.format(str2_id,
+                                                                                                      str2_minute,
+                                                                                                      str2_guard_id))
