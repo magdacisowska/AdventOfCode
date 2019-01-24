@@ -7,13 +7,13 @@ def is_gonna_react(a, b):
 
 
 def react(input):
-    new_polymer = ['p']
+    new_polymer = []
     old_polymer = list(reversed(input))
 
     while old_polymer:
         current_unit = old_polymer.pop()
 
-        if is_gonna_react(current_unit, new_polymer[-1]):
+        if new_polymer and is_gonna_react(current_unit, new_polymer[-1]):
             new_polymer.pop()
         else:
             new_polymer.append(current_unit)
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     input = open('inputs/input5.txt').read()
 
     new_polymer = react(input)
-    print('Part One: Polymer after reaction has {} units'.format(len(new_polymer) - 2))
+    print('Part One: Polymer after reaction has {} units'.format(len(new_polymer) - 1))
 
     alphabet = []
     for letter in range(97, 123):
@@ -48,7 +48,7 @@ if __name__ == '__main__':
         new_polymer = react(new_polymer)
         data[letter] = len(new_polymer)
 
-    max_value = min(data.values()) - 2
+    max_value = min(data.values()) - 1
     max_arg = min(data, key=data.get)
 
     print('Part Two: The shortest polymer is {} units long, after the removal of letter: {}'.format(max_value, max_arg))
