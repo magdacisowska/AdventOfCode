@@ -1,37 +1,27 @@
+def is_gonna_react(a, b):
+    low_up = a.isupper() and b.islower()
+    up_low = a.islower() and b.isupper()
+    same_sign = a.lower() == b.lower()
+
+    return (low_up or up_low) and same_sign
+
 
 def react(input):
-    old_polymer = input
-    new_polymer = []
-    counter = 0
+    new_polymer = ['p']
+    old_polymer = list(reversed(input))
 
-    while len(old_polymer) != len(new_polymer):
-        if counter == 0:
-            old_polymer = input
-            new_polymer = []
+    while old_polymer:
+        current_unit = old_polymer.pop()
+
+        if is_gonna_react(current_unit, new_polymer[-1]):
+            new_polymer.pop()
         else:
-            old_polymer = new_polymer
-            new_polymer = []
-
-        i = 0
-        while i < len(old_polymer) - 1:
-
-            one_case = old_polymer[i].isupper() and old_polymer[i + 1].islower()
-            second_case = old_polymer[i].islower() and old_polymer[i + 1].isupper()
-
-            if (one_case or second_case) and old_polymer[i].lower() == old_polymer[i + 1].lower():
-                i += 2
-            else:
-                new_polymer.append(old_polymer[i])
-                if i == len(old_polymer) - 2:
-                    new_polymer.append(old_polymer[i + 1])
-                i += 1
-        counter = 1
+            new_polymer.append(current_unit)
 
     return new_polymer
 
 
 def remove_unit(unit, polymer):
-
     new_polymer = []
 
     for i in range(len(polymer)):
@@ -45,22 +35,20 @@ if __name__ == '__main__':
 
     input = open('inputs/input5.txt').read()
 
-    # reduced_polymer = react(input)
-    # print('Part One: Polymer after reaction has {} units'.format(len(reduced_polymer)))
-
-    data = {}
+    new_polymer = react(input)
+    print('Part One: Polymer after reaction has {} units'.format(len(new_polymer) - 2))
 
     alphabet = []
     for letter in range(97, 123):
         alphabet.append(chr(letter))
 
+    data = {}
     for letter in alphabet:
-        reduced = remove_unit(letter, input)
-        reduced = react(reduced)
-        data[letter] = len(reduced)
-        print(letter, len(reduced))
+        new_polymer = remove_unit(letter, input)
+        new_polymer = react(new_polymer)
+        data[letter] = len(new_polymer)
 
+    max_value = min(data.values()) - 2
     max_arg = min(data, key=data.get)
-    max_value = min(data.values())
 
     print('Part Two: The shortest polymer is {} units long, after the removal of letter: {}'.format(max_value, max_arg))
