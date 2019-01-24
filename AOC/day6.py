@@ -63,6 +63,8 @@ def calculate_terrain(points, min_x, max_x, min_y, max_y):
 
 def find_the_max(general_map):
     summary = {}
+
+    # in summary key = landmark, value = number of nearest neighbouring points
     for point, nearest in general_map.items():
         summary[nearest] = summary.get(nearest, 0) + 1
 
@@ -92,7 +94,7 @@ if __name__ == '__main__':
     # prepare the data, points are the landmarks' coordinates
     points, min_x, max_x, min_y, max_y = prepare_data(input)
 
-    # create the general map of all points in the are of min and max values of landmarks
+    # create the general map of all points in the area of min and max values of landmarks
     general_map = calculate_terrain(points, min_x, max_x, min_y, max_y)
 
     # find the solution, having checked previously some additional conditions
