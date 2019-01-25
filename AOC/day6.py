@@ -87,6 +87,21 @@ def find_the_max(general_map):
     return max(summary, key=summary.get), max(summary.values())
 
 
+def find_safe_region(general_map, landmarks, threshold):
+    # key = point, value = total distance to all landmarks
+    region = {}
+
+    for point, _ in general_map.items():
+        total_distance = 0
+        for landmark in landmarks:
+            total_distance += distance(point, landmark)
+
+        if total_distance < threshold:
+            region[point] = total_distance
+
+    return region
+
+
 if __name__ == '__main__':
 
     input = open('inputs/input6.txt').read().splitlines()
@@ -100,4 +115,11 @@ if __name__ == '__main__':
     # find the solution, having checked previously some additional conditions
     biggest_landmark_coords = find_the_max(general_map)
 
-    print('The biggest number of neighbours, less than infinity, is {}'.format(biggest_landmark_coords[1]))
+    print('Part One: The biggest number of neighbours, less than infinity, is {}'.format(biggest_landmark_coords[1]))
+
+    # find region (points) that have the total distance less than 10000
+    region = find_safe_region(general_map, points, 10000)
+    region_area = len(region)
+
+    print('Part Two: The size of the region containing all locations which have a total \n'
+          '          distance to all given coordinates of less than 10000 is {}'.format(region_area))
