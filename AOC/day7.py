@@ -24,14 +24,17 @@ i = 0
 
 while i < 7:
 
-    if rules.get(next_step) is None:
-        next_step = Q.pop()
-        order.pop()
-    else:
+    print(rules.get(next_step))
+
+    if rules.get(next_step) is not None:
         order.append(rules.get(next_step)[0])
         if rules.get(next_step)[1:]:
             Q.append(rules.get(next_step)[1:])
         next_step = rules.get(next_step)[0]
+
+    else:
+        next_step = Q.pop()
+        order.pop()
 
     i += 1
 
