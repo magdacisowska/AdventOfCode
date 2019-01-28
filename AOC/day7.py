@@ -1,5 +1,3 @@
-import collections
-
 input = open('inputs/input77.txt').read().splitlines()
 
 rules = {}
@@ -8,35 +6,33 @@ for line in input:
     _, before, _, _, _, _, _, after, _, _ = line.split(' ')
     rules[before] = rules.get(before, '') + after
 
+# sort alphabetically
 for before, after in rules.items():
     rules[before] = sorted(after)
-
-# rules = collections.OrderedDict(sorted(rules.items()))
-print(rules)
+print('Rules: ', rules)
 
 next_step = input[0][5]
-# print(next_step)
+end_step = 'E'
 
+# a list representing the solution
 order = [next_step]
 
-while len(order) != len(rules):
+# que for waiting symbols
+Q = []
 
-    print(next_step, order)
+i = 0
 
-    if rules.get(next_step, None):
-        next_step = rules.get(next_step, None)[0]
+while i < 7:
 
-        values = rules.get(next_step)
-        if values is not None:
-            values = (list(reversed(values)))
-            values.pop()
-            values = (list(reversed(values)))
-            print(values)
-            # rules[next_step] = values
-
-        order.append(next_step)
-    else:
+    if rules.get(next_step) is None:
+        next_step = Q.pop()
         order.pop()
-        next_step = order[-2]
+    else:
+        order.append(rules.get(next_step)[0])
+        if rules.get(next_step)[1:]:
+            Q.append(rules.get(next_step)[1:])
+        next_step = rules.get(next_step)[0]
 
-print(rules)
+    i += 1
+
+print(order)
